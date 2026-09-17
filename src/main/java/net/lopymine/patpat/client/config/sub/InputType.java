@@ -28,16 +28,20 @@ public enum InputType implements StringRepresentable {
 
 	public InputConstants.Type toVanillaType() {
 		return switch (this) {
-			case KEYSYM -> InputConstants.Type.KEYSYM;
-			case SCANCODE -> InputConstants.Type.SCANCODE;
+			case KEYSYM -> InputConstants./*? if >=26.3 {*/ Type.KEYBOARD /*?} else {*/ /*Type.KEYSYM *//*?}*/;
+			case SCANCODE -> InputConstants./*? if >=26.3 {*/ Type.KEYBOARD /*?} else {*/ /*Type.SCANCODE *//*?}*/;
 			case MOUSE -> InputConstants.Type.MOUSE;
 		};
 	}
 
 	public static InputType of(InputConstants.Type type) {
 		return switch (type) {
-			case KEYSYM -> KEYSYM;
+			//? if >=26.3 {
+			case KEYBOARD -> KEYSYM;
+			//?} else {
+			/*case KEYSYM -> KEYSYM;
 			case SCANCODE -> SCANCODE;
+			*///?}
 			case MOUSE -> MOUSE;
 		};
 	}

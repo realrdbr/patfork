@@ -22,7 +22,7 @@ public abstract class NewKeyBindsScreenModernMixin extends KeyBindsScreen {
 	private void handlePatPatKeybindingOnKeyPressed(/*? if >=1.21.9 {*/net.minecraft.client.input.KeyEvent event/*?} else {*/ /*net.minecraft.client.input.KeyEvent event*//*?}*/, CallbackInfoReturnable<Boolean> cir) {
 		//? if >=1.21.9 {
 		int keyCode = event.key();
-		int scanCode = event.scancode();
+		int scanCode = /*? if >=26.3 {*/ event.keycode() /*?} else {*/ /*event.scancode() *//*?}*/;
 		//?}
 		PatPatClientKeybindingManager.handlePatPatKeybindingOnKeyPressed(this.selectedKey, this, keyCode, scanCode, () -> cir.setReturnValue(false));
 	}

@@ -4,7 +4,12 @@ import lombok.*;
 import net.lopymine.patpat.utils.TextUtils;
 import net.minecraft.client.*;
 import net.minecraft.network.chat.*;
-import org.lwjgl.glfw.GLFW;
+
+//? if >=26.3 {
+import org.lwjgl.sdl.SDLMouse;
+//?} else {
+/*import org.lwjgl.glfw.GLFW;*/
+//?}
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.InputConstants.*;
@@ -22,8 +27,8 @@ public class PatPatKeybinding extends KeyMapping {
 
 	private static @NotNull KeybindingCombination getDefaultCombination() {
 		return new KeybindingCombination(
-				Type.KEYSYM.getOrCreate(GLFW.GLFW_KEY_LEFT_SHIFT),
-				Type.MOUSE.getOrCreate(GLFW.GLFW_MOUSE_BUTTON_2)
+				/*? if >=26.3 {*/ Type.KEYBOARD /*?} else {*/ /*Type.KEYSYM *//*?}*/.getOrCreate(InputConstants.KEY_LSHIFT),
+				Type.MOUSE.getOrCreate(InputConstants.MOUSE_BUTTON_RIGHT)
 		);
 	}
 
@@ -35,7 +40,18 @@ public class PatPatKeybinding extends KeyMapping {
 	private boolean canStartBinding = true;
 
 	public PatPatKeybinding(KeybindingCombination patCombination) {
-		super("patpat.keybinding.pat", -1, /*? if <1.21.9 {*//*PatPat.MOD_NAME*//*?} else {*/PatPatClientKeybindingManager.CATEGORY/*?}*/);
+		super(
+				"patpat.keybinding.pat",
+				/*? if >=26.3 {*/
+				InputConstants.UNKNOWN.getValue(),
+				/*?} else {*/
+				/*-1,
+				 *//*?}*/
+				/*? if <1.21.9 {*//*PatPat.MOD_NAME*//*?} else {*/
+				PatPatClientKeybindingManager.CATEGORY
+				/*?}*/
+		);
+
 		this.combination.setAttributeKey(patCombination.getAttributeKey());
 		this.combination.setKey(patCombination.getKey());
 	}
@@ -43,7 +59,7 @@ public class PatPatKeybinding extends KeyMapping {
 	public void startBinding() {
 		this.combination.setAttributeKey(null);
 		this.combination.setKey(null);
-		this.binding         = true;
+		this.binding = true;
 		this.canStartBinding = false;
 	}
 
@@ -51,19 +67,23 @@ public class PatPatKeybinding extends KeyMapping {
 		if (this.isCanStartBinding()) {
 			this.startBinding();
 		}
+
 		if (!this.isBinding()) {
 			return true;
 		}
-		if (key.getValue() == GLFW.GLFW_KEY_ESCAPE) {
+
+		if (key.getValue() == InputConstants.KEY_ESCAPE) {
 			this.refreshPressedState();
 			this.combination.setKey(null);
 			this.combination.setAttributeKey(null);
 			return true;
 		}
+
 		if (KeybindingCombination.isAttributeKey(key.getValue())) {
 			if (this.combination.isComplete()) {
 				return true;
 			}
+
 			this.combination.setAttributeKey(key);
 			return this.combination.isComplete();
 		} else {
@@ -75,7 +95,7 @@ public class PatPatKeybinding extends KeyMapping {
 	public void sendBindingKeys() {
 		this.saveCombination();
 		this.combination.setAll(false);
-		this.binding         = false;
+		this.binding = false;
 		this.canStartBinding = true;
 	}
 
@@ -103,9 +123,11 @@ public class PatPatKeybinding extends KeyMapping {
 		if (this.combination.onlyOneKey()) {
 			this.combination.set(key, pressed);
 			this.setDown(pressed);
-			if(!pressed){
+
+			if (!pressed) {
 				PatPatClientManager.setPatCooldown(0);
 			}
+
 			return this.isDown();
 		}
 
@@ -117,10 +139,12 @@ public class PatPatKeybinding extends KeyMapping {
 		}
 
 		this.combination.set(key, true);
+
 		boolean allPressedState = this.combination.allPressed();
 		this.setDown(allPressedState);
 
-		return allPressedState && !KeybindingCombination.isAttributeKey(key.getValue());
+		return allPressedState
+				&& !KeybindingCombination.isAttributeKey(key.getValue());
 	}
 
 	@Override
@@ -134,16 +158,19 @@ public class PatPatKeybinding extends KeyMapping {
 		//? if >=1.19 {
 		return this.getFullTranslatedKeyMessage();
 		//?} else {
-		/*if (this.combination.onlyOneKey()) {
-			return this.getFullTranslatedKeyMessage();
-		} else {
-			return TextUtils.literal(this.isSelected() ? "..." : "< ... >");
-		}
-		*///?}
+                /*if (this.combination.onlyOneKey()) {
+                        return this.getFullTranslatedKeyMessage();
+                } else {
+                        return TextUtils.literal(this.isSelected() ? "..." : "< ... >");
+                }*/
+		//?}
 	}
 
 	public boolean isSelected() {
-		return Minecraft.getInstance().screen instanceof net.minecraft.client.gui.screens./*? if >=1.21 {*/options./*?}*/controls.KeyBindsScreen screen && screen.selectedKey == this;
+		return Minecraft.getInstance().gui.screen()
+				instanceof net.minecraft.client.gui.screens./*? if >=1.21 {*/options./*?}*/
+				controls.KeyBindsScreen screen
+				&& screen.selectedKey == this;
 	}
 
 	@NotNull
@@ -153,13 +180,56 @@ public class PatPatKeybinding extends KeyMapping {
 
 	public void refreshPressedState() {
 		List<Key> keys = this.combination.getKeys();
+
+		//? if >=26.3 {
+		int mouseState = SDLMouse.SDL_GetMouseState(null, null);
+		//?}
+
 		keys.forEach(key -> {
-			if (key.getType() == Type.KEYSYM) {
-				this.combination.set(key, InputConstants.isKeyDown(Minecraft.getInstance().getWindow()/*? if <=1.21.8 {*//*.getWindow() *//*?}*/, key.getValue()));
+			if (key.getType() == /*? if >=26.3 {*/ Type.KEYBOARD /*?} else {*/ /*Type.KEYSYM *//*?}*/) {
+
+				//? if >=26.3 {
+				this.combination.set(
+						key,
+						InputConstants.isKeyDown(key.getValue())
+				);
+				//?} else {
+                                /*this.combination.set(
+                                                key,
+                                                InputConstants.isKeyDown(
+                                                                Minecraft.getInstance().getWindow()*/ /*? if <=1.21.8 {*/
+				/*.getWindow()*/
+				/*?}*/ /*,
+                                                                key.getValue()
+                                                )
+                                );*/
+				//?}
+
 			} else {
-				this.combination.set(key, GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow()/*? if <=1.21.8 {*//*.getWindow() *//*?} else {*/ .handle() /*?}*/, key.getValue()) == 1);
+
+				//? if >=26.3 {
+				int buttonMask = 1 << (key.getValue() - 1);
+
+				this.combination.set(
+						key,
+						(mouseState & buttonMask) != 0
+				);
+				//?} else {
+                                /*this.combination.set(
+                                                key,
+                                                GLFW.glfwGetMouseButton(
+                                                                Minecraft.getInstance().getWindow()*/ /*? if <=1.21.8 {*/
+				/*.getWindow()*/
+				/*?} else {*/
+				/*.handle()*/
+				/*?}*/ /*,
+                                                                key.getValue()
+                                                ) == 1
+                                );*/
+				//?}
 			}
 		});
+
 		boolean allPressed = this.combination.allPressed();
 		this.setDown(allPressed);
 	}

@@ -31,12 +31,21 @@ public class MouseHandlerMixin {
 	}
 	*///?}
 
+	//? if >=26.3 {
 	@Inject(method = "onMove", at = @At("HEAD"), cancellable = true)
+	private void blockRealMouseMoveDuringTests(long window, double x, double y, double xd, double yd, CallbackInfo ci) {
+		if (PatPatTestMode.isRealInputBlocked()) {
+			ci.cancel();
+		}
+	}
+	//?} else {
+	/*@Inject(method = "onMove", at = @At("HEAD"), cancellable = true)
 	private void blockRealMouseMoveDuringTests(long window, double x, double y, CallbackInfo ci) {
 		if (PatPatTestMode.isRealInputBlocked()) {
 			ci.cancel();
 		}
 	}
+	*///?}
 
 	@Inject(method = "onScroll", at = @At("HEAD"), cancellable = true)
 	private void blockRealMouseScrollDuringTests(long window, double x, double y, CallbackInfo ci) {

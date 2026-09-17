@@ -5,7 +5,6 @@ import net.lopymine.patpat.client.command.PatPatClientCommandManager;
 import net.lopymine.patpat.extension.GameProfileExtension;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
-import net.minecraft.util.Tuple;
 import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;

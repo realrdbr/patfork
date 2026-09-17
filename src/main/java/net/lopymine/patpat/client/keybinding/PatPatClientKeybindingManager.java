@@ -85,7 +85,7 @@ public class PatPatClientKeybindingManager {
 	}
 
 	public static InputConstants.Key getKey(int keyCode, int scanCode) {
-		return keyCode == -1 ? InputConstants.Type.SCANCODE.getOrCreate(scanCode) : InputConstants.Type.KEYSYM.getOrCreate(keyCode);
+		return keyCode == -1 ? InputConstants./*? if >=26.3 {*/ Type.KEYBOARD /*?} else {*/ /*Type.SCANCODE *//*?}*/.getOrCreate(scanCode) : InputConstants./*? if >=26.3 {*/ Type.KEYBOARD /*?} else {*/ /*Type.KEYSYM *//*?}*/.getOrCreate(keyCode);
 	}
 
 }

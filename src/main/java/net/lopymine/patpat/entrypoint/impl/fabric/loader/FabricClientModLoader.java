@@ -57,12 +57,14 @@ public class FabricClientModLoader implements IClientModLoader {
 		 *///?}
 	}
 
-	@Override
+	//? if <26.3 {
+/*	@Override
 	public void registerAfterEntitiesRenderer(CustomRenderer renderer) {
 		//? if <=1.21.8 {
-		/*WorldRenderEvents.AFTER_ENTITIES.register((context) -> renderer.render(context.consumers(), context.matrixStack()));
-		*///?}
-	}
+		/^WorldRenderEvents.AFTER_ENTITIES.register((context) -> renderer.render(context.consumers(), context.matrixStack()));
+		 ^///?}
+	}*/
+//?}
 
 	@Override
 	public void registerAfterWorldTickListener(Consumer<ClientLevel> consumer) {

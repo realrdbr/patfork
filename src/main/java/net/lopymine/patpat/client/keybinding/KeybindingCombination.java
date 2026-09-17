@@ -14,7 +14,7 @@ import net.lopymine.patpat.client.config.sub.InputType;
 import java.util.*;
 import java.util.stream.Stream;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.glfw.GLFW;
+import com.mojang.blaze3d.platform.InputConstants;
 
 @Getter
 @Setter
@@ -35,16 +35,16 @@ public class KeybindingCombination {
 	).apply(instance, KeybindingCombination::new));
 
 	private static final Set<Integer> ATTRIBUTE_KEY_IDS = Set.of(
-			GLFW.GLFW_KEY_LEFT_ALT,
-			GLFW.GLFW_KEY_LEFT_CONTROL,
-			GLFW.GLFW_KEY_LEFT_SHIFT,
-			GLFW.GLFW_KEY_LEFT_SUPER,
-			GLFW.GLFW_KEY_RIGHT_ALT,
-			GLFW.GLFW_KEY_RIGHT_CONTROL,
-			GLFW.GLFW_KEY_RIGHT_SHIFT,
-			GLFW.GLFW_KEY_RIGHT_SUPER,
-			GLFW.GLFW_KEY_TAB,
-			GLFW.GLFW_KEY_CAPS_LOCK
+			InputConstants.KEY_LALT,
+			InputConstants.KEY_LCONTROL,
+			InputConstants.KEY_LSHIFT,
+			/*? if >=26.3 {*/ InputConstants.KEY_LGUI /*?} else {*/ /*InputConstants.KEY_LSUPER *//*?}*/,
+			InputConstants.KEY_RALT,
+			InputConstants.KEY_RCONTROL,
+			InputConstants.KEY_RSHIFT,
+			/*? if >=26.3 {*/ InputConstants.KEY_RGUI /*?} else {*/ /*InputConstants.KEY_RSUPER *//*?}*/,
+			InputConstants.KEY_TAB,
+			InputConstants.KEY_CAPSLOCK
 	);
 
 	@Nullable

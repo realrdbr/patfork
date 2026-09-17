@@ -18,14 +18,19 @@ import net.lopymine.patpat.client.resourcepack.AbstractResourceReloadListener;
 import net.lopymine.patpat.packet.*;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.sounds.SoundEvent;
+//? if <26.3 {
+/*import net.minecraft.client.renderer.MultiBufferSource;
+ *///?}
+// import net.minecraft.sounds.SoundEvent;
 
 public interface IClientModLoader {
 
 	void registerClientCommands(Consumer<CommandDispatcher<FabricClientCommandSource>> consumer);
 
-	void registerAfterEntitiesRenderer(CustomRenderer renderer);
+	//? if <26.3 {
+	/*void registerAfterEntitiesRenderer(CustomRenderer renderer);
+	 *///?}
 
 	void registerAfterWorldTickListener(Consumer<ClientLevel> consumer);
 
@@ -61,11 +66,13 @@ public interface IClientModLoader {
 
 	}
 
-	interface CustomRenderer {
+	//? if <26.3 {
+	/*interface CustomRenderer {
 
-		void render(MultiBufferSource source, PoseStack stack);
+        void render(MultiBufferSource source, PoseStack stack);
 
 	}
+	*///?}
 
 	interface SoundRegister {
 

@@ -9,9 +9,17 @@ import net.lopymine.patpat.client.render.feature.*;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.MultiBufferSource;
+
+//? if >=26.3 {
+import net.minecraft.client.renderer.SubmitNodeCollector;
+//?} else {
+/*import net.minecraft.client.renderer.MultiBufferSource;
+ *///?}
+
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
-import net.minecraft.network.protocol.game.ServerboundSwingPacket;
+//? if <26.3 {
+/*import net.minecraft.network.protocol.game.ServerboundSwingPacket;
+ *///?}
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -105,19 +113,43 @@ public class PatPatClientRenderer {
 				LivingEntity pattedEntity = packet.pattedEntity();
 				PlayerConfig playerConfig = packet.playerConfig();
 
-				ClientMultiLoader.getInstance().sendPacketToServer(PatPatClientPacketManager.getPatPacket(pattedEntity));
+				PatPatClientVisualConfig visualConfig = config.getVisualConfig();
+
+				ClientMultiLoader.getInstance().sendPacketToServer(
+						//? if >=26.3 {
+						PatPatClientPacketManager.getPatPacket(
+								pattedEntity,
+								visualConfig.isServerSwingHandEnabled() && !player.isSpectator()
+						)
+						//?} else {
+						/*PatPatClientPacketManager.getPatPacket(pattedEntity)
+						 *///?}
+				);
+
 				PatEntity patEntity = PatPatClientManager.pat(pattedEntity, playerConfig);
 
 				PatPatClientStatsConfig statsConfig = PatPatClientStatsConfig.getInstance();
 				statsConfig.count(pattedEntity);
 
-				PatPatClientVisualConfig visualConfig = config.getVisualConfig();
 				if (visualConfig.isClientSwingHandEnabled()) {
-					player.swing(InteractionHand.MAIN_HAND, false);
+					//? if >=26.3 {
+					player.swing(
+							InteractionHand.MAIN_HAND,
+							player.getItemInHand(InteractionHand.MAIN_HAND).getAttackAnimation(),
+							false
+					);
+					//?} else {
+					/*player.swing(InteractionHand.MAIN_HAND, false);
+					 *///?}
 				}
-				if (visualConfig.isServerSwingHandEnabled() && !player.isSpectator()) {
-					player.connection.send(new ServerboundSwingPacket(InteractionHand.MAIN_HAND));
+
+				//? if <26.3 {
+				/*if (visualConfig.isServerSwingHandEnabled() && !player.isSpectator()) {
+						player.connection.send(
+										new ServerboundSwingPacket(InteractionHand.MAIN_HAND)
+						);
 				}
+				*///?}
 
 				ReplayModCompat.onPat(pattedEntity.getId(), player.getId());
 				FlashbackCompat.onPat(pattedEntity.getId(), player.getId());
@@ -141,13 +173,13 @@ public class PatPatClientRenderer {
 		});
 	}
 
-	public static void renderPatOnYourself() {
+	public static void renderPatOnYourself(/*? if >=26.3 {*/ SubmitNodeCollector collector /*?}*/) {
 		if (!PatPatClientConfig.getInstance().getVisualConfig().isCameraShackingEnabled()) {
 			return;
 		}
 
 		LocalPlayer player = Minecraft.getInstance().player;
-		Camera camera = Minecraft.getInstance().gameRenderer.getMainCamera();
+		Camera camera = Minecraft.getInstance()./*? if >=26.3 {*/ gameRenderer.mainCamera() /*?} else {*/ /*gameRenderer.getMainCamera() *//*?}*/;
 		if (player == null || camera.isDetached()) {
 			return;
 		}
@@ -172,10 +204,23 @@ public class PatPatClientRenderer {
 			return;
 		}
 
-		PatPatClientRenderer.render(new PoseStack(), camera.rotation(), patEntity, player, new Vec3f(0.0F, Mth.lerp(tickDelta, camera.eyeHeightOld, camera.eyeHeight) - 0.2F, 0.0F), tickDelta, light, null);
+		PatPatClientRenderer.render(new PoseStack(), camera.rotation(), patEntity, player, new Vec3f(0.0F, Mth.lerp(tickDelta, camera.eyeHeightOld, camera.eyeHeight) - 0.2F, 0.0F), tickDelta, light, /*? if >=26.3 {*/ collector /*?} else {*/ /*null *//*?}*/);
 	}
 
-	public static RenderResult render(PoseStack matrices, /*? if >=1.19.3 {*/ Quaternionf /*?} else {*/ /*Quaternion *//*?}*/ cameraRotation, @Nullable PatEntity providedPatEntity, @Nullable Entity entity, @Nullable Vec3f overrideOffset, float tickDelta, int light, @Nullable MultiBufferSource provider) {
+	public static RenderResult render(
+			PoseStack matrices,
+			/*? if >=1.19.3 {*/ Quaternionf /*?} else {*/ /*Quaternion *//*?}*/ cameraRotation,
+			@Nullable PatEntity providedPatEntity,
+			@Nullable Entity entity,
+			@Nullable Vec3f overrideOffset,
+			float tickDelta,
+			int light,
+			//? if >=26.3 {
+			@Nullable SubmitNodeCollector provider
+			//?} else {
+			/*@Nullable MultiBufferSource provider
+			 *///?}
+	) {
 		PatPatClientConfig config = PatPatClientConfig.getInstance();
 		if (!config.getMainConfig().isModEnabled()) {
 			return RenderResult.FAILED;
@@ -205,7 +250,7 @@ public class PatPatClientRenderer {
 
 		matrices.pushPose();
 		matrices.translate(0.0F, yOffset, 0.0F);
-		matrices.mulPose(cameraRotation);
+		/*? if >=26.3 {*/ matrices.rotate(cameraRotation) /*?} else {*/ /*matrices.mulPose(cameraRotation) *//*?}*/;
 		matrices.scale(0.85F * numberToMirrorTexture, -0.85F, 0.85F);
 
 		int frameWidth = animation.getTextureWidth() / frameConfig.totalFrames();
@@ -234,7 +279,18 @@ public class PatPatClientRenderer {
 		float v1 = 0.0F;
 		float v2 = 1.0F;
 
-		PatFeatureRenderer.getInstance().request(animation.getTexture(), matrices.last(), x1, y1, x2, y2, z, u1, v1, u2, v2, light, provider);
+		PatFeatureRenderer.getInstance().request(
+				animation.getTexture(),
+				//? if >=26.3 {
+				matrices,
+				//?} else {
+				/*matrices.last(),
+				 *///?}
+				x1, y1, x2, y2, z,
+				u1, v1, u2, v2,
+				light,
+				provider
+		);
 
 		matrices.popPose();
 		disableBlend();

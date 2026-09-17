@@ -1,4 +1,3 @@
-
 package net.lopymine.patpat.client;
 
 //? >=1.19.4 && fabric {

@@ -60,7 +60,18 @@ public class EntityRendererMixin {
 		Entity entity = stateWithParent.patPat$getEntity();
 		float tickDelta = stateWithParent.patPat$getTickDelta();
 
-		Boolean result = this.render(matrices, state.lightCoords, entity, tickDelta, true, null);
+		Boolean result = this.render(
+				matrices,
+				state.lightCoords,
+				entity,
+				tickDelta,
+				true,
+				//? if >=26.3 {
+				submitNodeCollector
+				//?} else {
+				/*null
+				 *///?}
+		);
 		if (result != null) {
 			original.call(instance, state, poseStack, submitNodeCollector, cameraRenderState);
 		}
@@ -96,7 +107,18 @@ public class EntityRendererMixin {
 	// original => render, null => cancel
 	@Unique
 	@Nullable
-	private <T> T render(PoseStack matrices, int light, Entity entity, float tickDelta, @SuppressWarnings("all") T original, @Nullable MultiBufferSource provider) {
+	private <T> T render(
+			PoseStack matrices,
+			int light,
+			Entity entity,
+			float tickDelta,
+			@SuppressWarnings("all") T original,
+			//? if >=26.3 {
+			@Nullable SubmitNodeCollector provider
+			//?} else {
+			/*@Nullable MultiBufferSource provider
+			 *///?}
+	) {
 		if (!(entity instanceof LivingEntity)) {
 			return original;
 		}

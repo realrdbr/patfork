@@ -29,7 +29,8 @@ public abstract class MinecraftClientMixin {
 		PatPatClientManager.requestPat();
 	}
 
-	@Inject(at = @At("HEAD"), method = "setScreen")
+	//? if <26.3 {
+	/*@Inject(at = @At("HEAD"), method = "setScreen")
 	private void clearPatPatKeybinding(Screen screen, CallbackInfo ci) {
 		PatPatKeybinding patKeybinding = PatPatClientKeybindingManager.getPatKeybinding();
 		if (patKeybinding == null) {
@@ -37,6 +38,7 @@ public abstract class MinecraftClientMixin {
 		}
 		patKeybinding.refreshPressedState();
 	}
+	*///?}
 
 	@Inject(at = @At("HEAD"), method = "close")
 	private void testLogOnClosing(CallbackInfo ci) {

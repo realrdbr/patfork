@@ -15,7 +15,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(value = LevelRenderer.class, priority = 1039)
 public class LevelRendererMixin {
 
-	//? if >=26.1 {
+	//? if >=26.3 {
+	@Inject(at = @At("RETURN"), method = "submitEntities")
+	private void renderPatOnYourself(com.mojang.blaze3d.vertex.PoseStack poseStack,
+			net.minecraft.client.renderer.state.level.LevelRenderState state,
+			net.minecraft.client.renderer.SubmitNodeCollector collector, CallbackInfo ci) {
+		PatPatClientRenderer.renderPatOnYourself(collector);
+	}
+	//?} elif >=26.1 {
+	/*
 
 	@WrapOperation(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/feature/FeatureRenderDispatcher;renderTranslucentFeatures()V"), method = "lambda$addMainPass$0")
 	private void markLevelRendering(FeatureRenderDispatcher instance, Operation<Void> original) {
@@ -28,7 +36,7 @@ public class LevelRendererMixin {
 	private void renderPatOnYourself(CallbackInfo ci) {
 		PatPatClientRenderer.renderPatOnYourself();
 	}
-	//?} else {
+	*///?} else {
 	/*@WrapOperation(
 			at = @At(
 					value = "INVOKE",

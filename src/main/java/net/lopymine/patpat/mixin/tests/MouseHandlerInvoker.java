@@ -7,8 +7,13 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(MouseHandler.class)
 public interface MouseHandlerInvoker {
 
+	//? if >=26.3 {
 	@Invoker("onMove")
+	void invokeOnMove(long window, double x, double y, double xd, double yd);
+	//?} else {
+	/*@Invoker("onMove")
 	void invokeOnMove(long window, double x, double y);
+	*///?}
 
 	@Invoker("onScroll")
 	void invokeOnScroll(long window, double x, double y);

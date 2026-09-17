@@ -8,7 +8,6 @@ import java.util.function.BooleanSupplier;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.InputConstants.Key;
-import org.lwjgl.glfw.GLFW;
 
 import net.lopymine.patpat.client.config.PatPatClientConfig;
 import net.lopymine.patpat.client.keybinding.*;
@@ -230,7 +229,7 @@ public class PatPatTestClientAgent {
 				throw new IllegalStateException("The test world was not loaded in %d ticks".formatted(WORLD_LOAD_TIMEOUT_TICKS));
 			}
 			if (!created[0]) {
-				if (minecraft.getOverlay() != null) {
+				if (/*? if >=26.3 {*/ minecraft.gui.overlay() /*?} else {*/ /*minecraft.getOverlay() *//*?}*/ != null) {
 					return false;
 				}
 				created[0] = true;
@@ -317,7 +316,7 @@ public class PatPatTestClientAgent {
 
 	//? if >=1.21.4 {
 	private static net.minecraft.world.level.levelgen.WorldDimensions createFlatWorldDimensions(net.minecraft.core.HolderLookup.Provider registries) {
-		return net.minecraft.world.level.levelgen.presets.WorldPresets.createFlatWorldDimensions(registries);
+		return net.minecraft.world.level.levelgen.presets.WorldPresets./*? if >=26.3 {*/ createTestWorldDimensions /*?} else {*/ /*createFlatWorldDimensions *//*?}*/(registries);
 	}
 	//?} elif >=1.19.3 {
 	/*private static net.minecraft.world.level.levelgen.WorldDimensions createFlatWorldDimensions(net.minecraft.core.RegistryAccess registries) {
@@ -356,14 +355,14 @@ public class PatPatTestClientAgent {
 	}
 	*///?} else {
 	/*private static net.minecraft.world.level.levelgen.WorldGenSettings createFlatWorldGenSettings(net.minecraft.core.RegistryAccess.RegistryHolder registries) {
-		net.minecraft.core.Registry<net.minecraft.world.level.dimension.DimensionType> dimensionTypes = registries.registryOrThrow(net.minecraft.core.Registry.DIMENSION_TYPE_REGISTRY);
+		net.minecraft.core.Registry<net.minecraft.world.level.dimension.DimensionType> domainTypes = registries.registryOrThrow(net.minecraft.core.Registry.DIMENSION_TYPE_REGISTRY);
 		net.minecraft.core.Registry<net.minecraft.world.level.biome.Biome> biomes = registries.registryOrThrow(net.minecraft.core.Registry.BIOME_REGISTRY);
 		net.minecraft.core.Registry<net.minecraft.world.level.levelgen.NoiseGeneratorSettings> noiseSettings = registries.registryOrThrow(net.minecraft.core.Registry.NOISE_GENERATOR_SETTINGS_REGISTRY);
 		net.minecraft.world.level.levelgen.flat.FlatLevelGeneratorSettings flat = net.minecraft.world.level.levelgen.flat.FlatLevelGeneratorSettings.getDefault(biomes);
 
 		return new net.minecraft.world.level.levelgen.WorldGenSettings(WORLD_SEED, false, false, net.minecraft.world.level.levelgen.WorldGenSettings.withOverworld(
-				dimensionTypes,
-				net.minecraft.world.level.dimension.DimensionType.defaultDimensions(dimensionTypes, biomes, noiseSettings, WORLD_SEED),
+				domainTypes,
+				net.minecraft.world.level.dimension.DimensionType.defaultDimensions(domainTypes, biomes, noiseSettings, WORLD_SEED),
 				new net.minecraft.world.level.levelgen.FlatLevelSource(flat)
 		));
 	}
@@ -371,7 +370,7 @@ public class PatPatTestClientAgent {
 
 	private static boolean isWorldReady(Minecraft minecraft) {
 		MinecraftServer server = minecraft.getSingleplayerServer();
-		return minecraft.level != null && minecraft.player != null && minecraft.screen == null && server != null && server.isReady();
+		return minecraft.level != null && minecraft.player != null && (/*? if >=26.3 {*/ minecraft.gui.screen() /*?} else {*/ /*minecraft.screen *//*?}*/ == null) && server != null && server.isReady();
 	}
 
 	private static BooleanSupplier runCommands(Minecraft minecraft, String... commands) {
@@ -407,18 +406,18 @@ public class PatPatTestClientAgent {
 
 	private static BooleanSupplier openKeyBinds(Minecraft minecraft) {
 		return () -> {
-			if (minecraft.getOverlay() != null) {
+			if (/*? if >=26.3 {*/ minecraft.gui.overlay() /*?} else {*/ /*minecraft.getOverlay() *//*?}*/ != null) {
 				return false;
 			}
-			if (!(minecraft.screen instanceof KeyBindsScreen)) {
-				minecraft.setScreen(new KeyBindsScreen(minecraft.screen, minecraft.options));
+			if (!(/*? if >=26.3 {*/ minecraft.gui.screen() /*?} else {*/ /*minecraft.screen *//*?}*/ instanceof KeyBindsScreen)) {
+				/*? if >=26.3 {*/ minecraft.gui.setScreen /*?} else {*/ /*minecraft.setScreen *//*?}*/(new KeyBindsScreen(/*? if >=26.3 {*/ minecraft.gui.screen() /*?} else {*/ /*minecraft.screen *//*?}*/, minecraft.options));
 				return false;
 			}
 			if (findKeybindingButton(minecraft) != null) {
 				return true;
 			}
 			if (ticks > SCROLL_TIMEOUT_TICKS) {
-				throw new IllegalStateException("The PatPat keybinding button was not found on the key binds screen %s".formatted(minecraft.screen));
+				throw new IllegalStateException("The PatPat keybinding button was not found on the key binds screen %s".formatted(/*? if >=26.3 {*/ minecraft.gui.screen() /*?} else {*/ /*minecraft.screen *//*?}*/));
 			}
 			return false;
 		};
@@ -453,7 +452,7 @@ public class PatPatTestClientAgent {
 	}
 
 	private static AbstractSelectionList<?> findKeyBindsList(Minecraft minecraft) {
-		Screen screen = minecraft.screen;
+		Screen screen = /*? if >=26.3 {*/ minecraft.gui.screen() /*?} else {*/ /*minecraft.screen *//*?}*/;
 		if (screen == null) {
 			return null;
 		}
@@ -508,11 +507,11 @@ public class PatPatTestClientAgent {
 		int[] attempts = {0};
 		return () -> {
 			PatPatKeybinding keybinding = PatPatClientKeybindingManager.getPatKeybinding();
-			if (minecraft.screen instanceof KeyBindsScreen screen && screen.selectedKey == keybinding) {
+			if (/*? if >=26.3 {*/ minecraft.gui.screen() /*?} else {*/ /*minecraft.screen *//*?}*/ instanceof KeyBindsScreen screen && screen.selectedKey == keybinding) {
 				return ticks >= 5;
 			}
 			if (attempts[0] >= CLICK_ATTEMPTS) {
-				throw new IllegalStateException("The PatPat keybinding was not selected by the click after %d attempts, screen=%s".formatted(attempts[0], minecraft.screen));
+				throw new IllegalStateException("The PatPat keybinding was not selected by the click after %d attempts, screen=%s".formatted(attempts[0], /*? if >=26.3 {*/ minecraft.gui.screen() /*?} else {*/ /*minecraft.screen *//*?}*/));
 			}
 
 			Button button = awaitKeybindingButton(minecraft);
@@ -525,11 +524,11 @@ public class PatPatTestClientAgent {
 				return false;
 			}
 			if (phase[0] == 1) {
-				click(minecraft, GLFW.GLFW_PRESS);
+				click(minecraft, InputConstants.PRESS);
 				phase[0] = 2;
 				return false;
 			}
-			click(minecraft, GLFW.GLFW_RELEASE);
+			click(minecraft, InputConstants.RELEASE);
 			phase[0] = 0;
 			attempts[0]++;
 			return false;
@@ -544,11 +543,11 @@ public class PatPatTestClientAgent {
 
 		List<Runnable> steps = new ArrayList<>();
 		for (Key key : keys) {
-			steps.add(() -> sendKey(minecraft, key, GLFW.GLFW_PRESS));
+			steps.add(() -> sendKey(minecraft, key, InputConstants.PRESS));
 		}
 		for (int i = keys.size() - 1; i >= 0; i--) {
 			Key key = keys.get(i);
-			steps.add(() -> sendKey(minecraft, key, GLFW.GLFW_RELEASE));
+			steps.add(() -> sendKey(minecraft, key, InputConstants.RELEASE));
 		}
 
 		int[] index = {0};
@@ -592,7 +591,7 @@ public class PatPatTestClientAgent {
 			}
 		}
 
-		Screen screen = minecraft.screen;
+		Screen screen = /*? if >=26.3 {*/ minecraft.gui.screen() /*?} else {*/ /*minecraft.screen *//*?}*/;
 		return screen == null ? null : findKeybindingButton(screen.children());
 	}
 
@@ -639,15 +638,22 @@ public class PatPatTestClientAgent {
 		double x = (guiX * minecraft.getWindow().getScreenWidth()) / minecraft.getWindow().getGuiScaledWidth();
 		double y = (guiY * minecraft.getWindow().getScreenHeight()) / minecraft.getWindow().getGuiScaledHeight();
 
-		PatPatTestMode.runSyntheticInput(() -> ((MouseHandlerInvoker) minecraft.mouseHandler).invokeOnMove(getWindowHandle(minecraft), x, y));
+		PatPatTestMode.runSyntheticInput(() -> ((MouseHandlerInvoker) minecraft.mouseHandler).invokeOnMove(
+				getWindowHandle(minecraft),
+				x,
+				y
+				//? if >=26.3 {
+				, 0.0D, 0.0D
+				//?}
+		));
 	}
 
 	private static void click(Minecraft minecraft, int action) {
 		PatPatTestMode.runSyntheticInput(() -> {
 			//? if >=1.21.9 {
-			((MouseHandlerInvoker) minecraft.mouseHandler).invokeOnButton(getWindowHandle(minecraft), new net.minecraft.client.input.MouseButtonInfo(GLFW.GLFW_MOUSE_BUTTON_LEFT, 0), action);
+			((MouseHandlerInvoker) minecraft.mouseHandler).invokeOnButton(getWindowHandle(minecraft), new net.minecraft.client.input.MouseButtonInfo(InputConstants.MOUSE_BUTTON_LEFT, 0), action);
 			//?} else {
-			/*((MouseHandlerInvoker) minecraft.mouseHandler).invokeOnPress(getWindowHandle(minecraft), GLFW.GLFW_MOUSE_BUTTON_LEFT, action, 0);
+			/*((MouseHandlerInvoker) minecraft.mouseHandler).invokeOnPress(getWindowHandle(minecraft), InputConstants.MOUSE_BUTTON_LEFT, action, 0);
 			*///?}
 		});
 	}
@@ -783,7 +789,7 @@ public class PatPatTestClientAgent {
 		}
 
 		//? if >=1.21.6 {
-		Screenshot.grab(minecraft.gameDirectory, name + ".png", minecraft.getMainRenderTarget(), 1, component -> {});
+		Screenshot.grab(minecraft.gameDirectory, name + ".png", /*? if >=26.3 {*/ minecraft.gameRenderer.mainRenderTarget() /*?} else {*/ /*minecraft.getMainRenderTarget() *//*?}*/, 1, component -> {});
 		//?} elif >=1.17.1 {
 		/*Screenshot.grab(minecraft.gameDirectory, name + ".png", minecraft.getMainRenderTarget(), component -> {});
 		*///?} else {

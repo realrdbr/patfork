@@ -26,7 +26,7 @@ public class PatPatCommonListChangeCommand {
 		String key = String.format("list.%s.%s", action, result);
 
 		MutableComponent text = CommandText.goldenArgs(key, nickname)
-				.withShowEntity(EntityType.PLAYER, uuid, nickname)
+				.withShowEntity(/*? if >=26.3 {*/ net.minecraft.world.entity.EntityTypes.PLAYER /*?} else {*/ /*EntityType.PLAYER *//*?}*/, uuid, nickname)
 				.withCopyToClipboard(uuid)
 				.finish();
 

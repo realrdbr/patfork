@@ -174,6 +174,8 @@ public class PatPatTestHarness implements AutoCloseable {
 
 		String properties = String.join("\n",
 				"online-mode=false",
+				"white-list=false",
+				"enforce-whitelist=false",
 				"server-ip=" + SERVER_HOST,
 				"server-port=" + this.getServerPort(),
 				"level-name=" + WORLD_NAME,

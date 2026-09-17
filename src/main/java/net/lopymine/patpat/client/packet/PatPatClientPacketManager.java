@@ -70,7 +70,10 @@ public class PatPatClientPacketManager {
 		// if (version.isGreaterOrEqualThan(Version.PACKET_V3_VERSION)) {
 		// 	 // stuff
 		// } else
-		if (version.isGreaterOrEqualThan(Version.PACKET_V2_VERSION)) {
+		if (version.isGreaterOrEqualThan(Version.PACKET_V3_VERSION)) {
+			PatPatClientProxLibManager.disableIfNotInReplayModBecauseReceivedHelloPacketFromServer();
+			PatPatClientPacketManager.setCurrentPatPatServerPacketVersion(Version.PACKET_V3_VERSION);
+		} else if (version.isGreaterOrEqualThan(Version.PACKET_V2_VERSION)) {
 			PatPatClientProxLibManager.disableIfNotInReplayModBecauseReceivedHelloPacketFromServer();
 			PatPatClientPacketManager.setCurrentPatPatServerPacketVersion(Version.PACKET_V2_VERSION);
 		}
@@ -151,12 +154,33 @@ public class PatPatClientPacketManager {
 	}
 
 	public static PatPacket<ServerLevel, ?> getPatPacket(Entity pattedEntity) {
-		if (PatPatClientPacketManager.getCurrentPatPatServerPacketVersion().isGreaterOrEqualThan(Version.PACKET_V2_VERSION)) {
-			LOGGER.debug("Getting pat packet... Using V2 version");
-			return new PatEntityC2SPacketV2(pattedEntity);
-		} else {
-			LOGGER.debug("Getting pat packet... Using V1 version");
-			return new PatEntityC2SPacket(pattedEntity);
+		return getPatPacket(pattedEntity, false);
+	}
+
+	public static PatPacket<ServerLevel, ?> getPatPacket(
+			Entity pattedEntity,
+			boolean serverSwingHandEnabled
+	) {
+		Version serverVersion =
+				PatPatClientPacketManager.getCurrentPatPatServerPacketVersion();
+
+		if (serverVersion.isGreaterOrEqualThan(Version.PACKET_V3_VERSION)) {
+			LOGGER.debug("Getting pat packet... Using V3 version");
+
+			return new PatEntityC2SPacketV3(
+					pattedEntity,
+					serverSwingHandEnabled
+			);
 		}
+
+		if (serverVersion.isGreaterOrEqualThan(Version.PACKET_V2_VERSION)) {
+			LOGGER.debug("Getting pat packet... Using V2 version");
+
+			return new PatEntityC2SPacketV2(pattedEntity);
+		}
+
+		LOGGER.debug("Getting pat packet... Using V1 version");
+
+		return new PatEntityC2SPacket(pattedEntity);
 	}
 }

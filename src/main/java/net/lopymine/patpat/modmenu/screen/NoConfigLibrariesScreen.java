@@ -51,7 +51,7 @@ public class NoConfigLibrariesScreen {
 			if (!ALLOWED_PROTOCOLS.contains(string.toLowerCase(Locale.ROOT))) {
 				throw new URISyntaxException(url, "Unsupported protocol: " + string.toLowerCase(Locale.ROOT));
 			}
-			Util.getPlatform().openUri(link);
+			/*? if >=26.3 {*/ org.lwjgl.sdl.SDLMisc.SDL_OpenURL(link.toString()) /*?} else {*/ /*Util.getPlatform().openUri(link) *//*?}*/;
 		} catch (URISyntaxException e) {
 			PatPatClient.LOGGER.error("Can't open {} Modrinth page: ", (bl ? "YACL" : "Cloth Config API"), e);
 		}
@@ -71,7 +71,7 @@ public class NoConfigLibrariesScreen {
 		@Override
 		public boolean keyPressed(KeyEvent keyEvent) {
 			if (keyEvent.key() == 256 && this.shouldCloseOnEsc()) {
-				Minecraft.getInstance().setScreen(this.parent);
+				Minecraft.getInstance().gui.setScreen(this.parent);
 				return true;
 			}
 			return super.keyPressed(keyEvent);
@@ -81,7 +81,7 @@ public class NoConfigLibrariesScreen {
 			/*@Override
 			public boolean keyPressed(net.minecraft.client.input.KeyEvent event) {
 				if (keyCode == 256 && this.shouldCloseOnEsc()) {
-					Minecraft.getInstance().setScreen(parent);
+					Minecraft.getInstance().gui.setScreen(parent);
 					return true;
 				}
 				return super.keyPressed(keyCode, scanCode, modifiers);
