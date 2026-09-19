@@ -143,7 +143,7 @@ public class FabricServerModLoader implements IServerModLoader {
 		if (player == null) {
 			return false;
 		}
-		return Permissions.check(player, permission, 2);
+		return Permissions.check(player, permission, /*? if >=1.21.11 {*/ net.minecraft.server.permissions.PermissionLevel.byId(2) /*?} else {*/ /*2 *//*?}*/);
 	}
 
 	@Override
@@ -152,7 +152,7 @@ public class FabricServerModLoader implements IServerModLoader {
 			MinecraftServer server,
 			String permission
 	) {
-		return Permissions.check(profile, permission, 2, server);
+		return Permissions.check(profile, permission, /*? if >=1.21.11 {*/ net.minecraft.server.permissions.PermissionLevel.byId(2) /*?} else {*/ /*2 *//*?}*/, server);
 	}
 
 	@Override

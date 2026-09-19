@@ -54,7 +54,7 @@ public class PatPatClientIgnoreMobListConfig extends AbstractListConfig<EntityTy
 
 	@Override
 	protected EntityType<?> decode(String line) {
-		EntityType<?> entityType = VersionedThings.ENTITY_TYPE.getOptional(RLUtils.parse(line)).orElse(null);
+		EntityType<?> entityType = /*? if forge {*/ /*VersionedThings.ENTITY_TYPE.getValue(RLUtils.parse(line)) *//*?} else {*/ VersionedThings.ENTITY_TYPE.getOptional(RLUtils.parse(line)).orElse(null) /*?}*/;
 		if (entityType == null) {
 			this.getLogger().error("Failed to find entity type from line: \"{}\"", line);
 			return null;

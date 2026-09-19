@@ -38,11 +38,11 @@ public class KeybindingCombination {
 			InputConstants.KEY_LALT,
 			InputConstants.KEY_LCONTROL,
 			InputConstants.KEY_LSHIFT,
-			/*? if >=26.3 {*/ InputConstants.KEY_LGUI /*?} else {*/ /*InputConstants.KEY_LSUPER *//*?}*/,
+			/*? if >=26.3 {*/ InputConstants.KEY_LGUI /*?} else {*/ /*org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT_SUPER *//*?}*/,
 			InputConstants.KEY_RALT,
 			InputConstants.KEY_RCONTROL,
 			InputConstants.KEY_RSHIFT,
-			/*? if >=26.3 {*/ InputConstants.KEY_RGUI /*?} else {*/ /*InputConstants.KEY_RSUPER *//*?}*/,
+			/*? if >=26.3 {*/ InputConstants.KEY_RGUI /*?} else {*/ /*org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT_SUPER *//*?}*/,
 			InputConstants.KEY_TAB,
 			InputConstants.KEY_CAPSLOCK
 	);

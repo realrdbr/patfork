@@ -28,7 +28,7 @@ import net.minecraftforge.client.event.RenderLevelStageEvent.Stage;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent.*;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.lopymine.patpat.entrypoint.impl.forge.ForgeCommonEntrypoint;
 import net.minecraftforge.network.*;
 import net.minecraftforge.network.simple.SimpleChannel;
 import net.minecraftforge.registries.DeferredRegister;
@@ -85,7 +85,7 @@ public class ForgeClientModLoader implements IClientModLoader {
 
 	@Override
 	public void registerResourceReloadListener(AbstractResourceReloadListener listener) {
-		FMLJavaModLoadingContext.get().getModEventBus().<RegisterClientReloadListenersEvent>addListener((event) -> {
+		ForgeCommonEntrypoint.getContext().getModEventBus().<RegisterClientReloadListenersEvent>addListener((event) -> {
 			event.registerReloadListener(listener);
 		});
 	}
@@ -93,11 +93,11 @@ public class ForgeClientModLoader implements IClientModLoader {
 	@Override
 	public void registerKeybinding(KeyMapping keybinding) {
 		//? if >=1.19 {
-		FMLJavaModLoadingContext.get().getModEventBus().<RegisterKeyMappingsEvent>addListener((event) -> {
+		ForgeCommonEntrypoint.getContext().getModEventBus().<RegisterKeyMappingsEvent>addListener((event) -> {
 			event.register(keybinding);
 		});
 		//?} else {
-		/^FMLJavaModLoadingContext.get().getModEventBus().<net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent>addListener((event) -> {
+		/^ForgeCommonEntrypoint.getContext().getModEventBus().<net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent>addListener((event) -> {
 			net.minecraftforge.client.ClientRegistry.registerKeyBinding(keybinding);
 		});
 		^///?}
@@ -115,11 +115,7 @@ public class ForgeClientModLoader implements IClientModLoader {
 		private final DeferredRegister<SoundEvent> register;
 
 		public ForgeSoundRegister() {
-			//? if >=1.18.2 {
-			this.register = DeferredRegister.create(VersionedThings.SOUND_EVENT.key(), PatPat.MOD_ID);
-			//?} else {
-			/^this.register = DeferredRegister.create(net.minecraftforge.registries.ForgeRegistries.SOUND_EVENTS, PatPat.MOD_ID);
-			^///?}
+			this.register = DeferredRegister.create(net.minecraftforge.registries.ForgeRegistries.SOUND_EVENTS, PatPat.MOD_ID);
 		}
 
 		public SoundEvent registerSound(String id) {
@@ -129,7 +125,7 @@ public class ForgeClientModLoader implements IClientModLoader {
 		}
 
 		public void finish() {
-			this.register.register(FMLJavaModLoadingContext.get().getModEventBus());
+			this.register.register(ForgeCommonEntrypoint.getContext().getModEventBus());
 		}
 
 	}

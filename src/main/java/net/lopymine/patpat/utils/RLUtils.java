@@ -11,7 +11,7 @@ public class RLUtils {
 	}
 
 	public static Identifier parse(String string){
-		/*? if >1.20.6 {*/
+		/*? if >1.20.6 || (forge && >=1.20.1) {*/
 		return Identifier.parse(string);
 		/*?} else {*/
 		/*return new Identifier(string);
@@ -36,7 +36,7 @@ public class RLUtils {
 			location = split[1];
 		}
 
-		//? >=1.21 {
+		//? >=1.21 || (forge && >=1.20.1) {
 		return Identifier.fromNamespaceAndPath(name, location);
 		//?} else {
 		/*return new Identifier(name, location);

@@ -1,7 +1,9 @@
 {
 	"required": true,
 	"package": "net.lopymine.patpat.mixin",
-	"refmap": "${mod_id}.refmap.json",
+	/*? if <26.1 {*/
+	/*"refmap": "${mod_id}.refmap.json",
+	*//*?}*/
 	"compatibilityLevel": "JAVA_${java}",
 	"plugin": "net.lopymine.patpat.compat.PatPatMixinConfigPlugin",
 	"mixins": [],

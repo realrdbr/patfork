@@ -167,7 +167,7 @@ public class PatPatKeybinding extends KeyMapping {
 	}
 
 	public boolean isSelected() {
-		return Minecraft.getInstance().gui.screen()
+		return /*? if >=26.3 {*/ Minecraft.getInstance().gui.screen() /*?} else {*/ /*Minecraft.getInstance().screen *//*?}*/
 				instanceof net.minecraft.client.gui.screens./*? if >=1.21 {*/options./*?}*/
 				controls.KeyBindsScreen screen
 				&& screen.selectedKey == this;
@@ -193,16 +193,13 @@ public class PatPatKeybinding extends KeyMapping {
 						key,
 						InputConstants.isKeyDown(key.getValue())
 				);
-				//?} else {
-                                /*this.combination.set(
-                                                key,
-                                                InputConstants.isKeyDown(
-                                                                Minecraft.getInstance().getWindow()*/ /*? if <=1.21.8 {*/
-				/*.getWindow()*/
-				/*?}*/ /*,
-                                                                key.getValue()
-                                                )
-                                );*/
+				//?} else if <=1.21.8 {
+				/*this.combination.set(key, InputConstants.isKeyDown(
+						Minecraft.getInstance().getWindow().getWindow(), key.getValue()));
+				*///?} else {
+				/*this.combination.set(key, InputConstants.isKeyDown(
+						Minecraft.getInstance().getWindow(), key.getValue()));
+				*/
 				//?}
 
 			} else {
@@ -214,18 +211,13 @@ public class PatPatKeybinding extends KeyMapping {
 						key,
 						(mouseState & buttonMask) != 0
 				);
-				//?} else {
-                                /*this.combination.set(
-                                                key,
-                                                GLFW.glfwGetMouseButton(
-                                                                Minecraft.getInstance().getWindow()*/ /*? if <=1.21.8 {*/
-				/*.getWindow()*/
-				/*?} else {*/
-				/*.handle()*/
-				/*?}*/ /*,
-                                                                key.getValue()
-                                                ) == 1
-                                );*/
+				//?} else if <=1.21.8 {
+				/*this.combination.set(key, GLFW.glfwGetMouseButton(
+						Minecraft.getInstance().getWindow().getWindow(), key.getValue()) == GLFW.GLFW_PRESS);
+				*///?} else {
+				/*this.combination.set(key, GLFW.glfwGetMouseButton(
+						Minecraft.getInstance().getWindow().handle(), key.getValue()) == GLFW.GLFW_PRESS);
+				*/
 				//?}
 			}
 		});

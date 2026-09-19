@@ -99,7 +99,12 @@ public class NeoForgeClientModLoader implements IClientModLoader {
 
 	@Override
 	public void registerKeybinding(KeyMapping keybinding) {
-		NeoForgeClientEntrypoint.getEventBus().addListener(RegisterKeyMappingsEvent.class, (event) -> event.register(keybinding));
+		NeoForgeClientEntrypoint.getEventBus().addListener(RegisterKeyMappingsEvent.class, (event) -> {
+			//? if >=1.21.9 {
+			event.registerCategory(net.lopymine.patpat.client.keybinding.PatPatClientKeybindingManager.CATEGORY);
+			//?}
+			event.register(keybinding);
+		});
 	}
 
 	@Override

@@ -50,7 +50,7 @@ public class PatPatClientIgnoreCommand {
 		return literal("add")
 				.then(argument(ENTITY_TYPE_ARGUMENT_NAME, EntityTypeArgumentType.entityType())
 						.suggests((context, builder) -> SharedSuggestionProvider
-								.suggestResource(VersionedThings.ENTITY_TYPE.stream()
+								.suggestResource(VersionedThings.ENTITY_TYPE./*? if forge {*/ /*getValues().*//*?}*/stream()
 												.filter(
 														/*? >1.19.2 {*/entityType -> entityType.isEnabled((context.getSource()).enabledFeatures()) && entityType.canSummon()
 														/*?} else {*/

@@ -61,6 +61,7 @@ public class PatPatClientStatsConfig {
 	public static void registerSaveHooks() {
 		AutoSaveManager.start();
 		ClientMultiLoader.getInstance().registerOnClientStop(() -> {
+			AutoSaveManager.stop();
 			PatPatClientStatsConfig.getInstance().save();
 		});
 	}
@@ -86,7 +87,7 @@ public class PatPatClientStatsConfig {
 		CompletableFuture.runAsync(this::save);
 	}
 
-	public void save() {
+	public synchronized void save() {
 		ConfigUtils.saveConfig(this, CODEC, CONFIG_FILE, LOGGER);
 	}
 
@@ -103,7 +104,12 @@ public class PatPatClientStatsConfig {
 
 	private static class AutoSaveManager {
 
-		private static final ScheduledExecutorService SERVICE = Executors.newScheduledThreadPool(1);
+		private static final ScheduledExecutorService SERVICE = Executors.newSingleThreadScheduledExecutor(runnable -> {
+			Thread thread = new Thread(runnable, "PatPat-Stats-Autosave");
+			// Also allow JVM exit if startup fails before the client stop event fires.
+			thread.setDaemon(true);
+			return thread;
+		});
 		private static boolean shouldSave = true;
 
 		private static void start() {
@@ -125,6 +131,10 @@ public class PatPatClientStatsConfig {
 
 		private static void markToSave() {
 			AutoSaveManager.shouldSave = true;
+		}
+
+		private static void stop() {
+			SERVICE.shutdownNow();
 		}
 	}
 }

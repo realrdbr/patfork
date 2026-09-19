@@ -1,7 +1,7 @@
 import net.lopymine.utils.MossyUtils
 
 plugins {
-	id "net.lopymine.mossy-plugin-core" version "$mossy_plugin_version"
+	id "net.lopymine.mossy-plugin-core"
 }
 
 mossyDependencies {
@@ -82,6 +82,19 @@ dependencies {
 		if (stonecutter.compare(stonecutter.current.version.toString(), "1.18") < 0) {
 			compileOnly("org.jetbrains:annotations:23.0.0")
 		}
+	}
+}
+
+tasks.withType(Test).configureEach {
+	// Unit tests do not need JOML's deprecated Unsafe memory backend.
+	systemProperty "joml.nounsafe", "true"
+}
+
+tasks.withType(JavaCompile).configureEach {
+	options.compilerArgs.addAll(["-Xlint:deprecation", "-Xlint:removal"])
+	if (forge) {
+		// Mixin AP progress messages are informational; keep actual diagnostics enabled.
+		options.compilerArgs.add("-Aquiet=true")
 	}
 }
 

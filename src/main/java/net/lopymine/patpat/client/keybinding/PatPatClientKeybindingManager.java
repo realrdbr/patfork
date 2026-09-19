@@ -22,7 +22,9 @@ import net.lopymine.patpat.utils.RLUtils;
 public class PatPatClientKeybindingManager {
 
 	//? if >=1.21.9 {
-	public static final net.minecraft.client.KeyMapping.Category CATEGORY = net.minecraft.client.KeyMapping.Category.register(RLUtils.modId("keybinding"));
+	public static final net.minecraft.client.KeyMapping.Category CATEGORY =
+			/*? if neoforge && >=1.21.9 {*/ /*new net.minecraft.client.KeyMapping.Category(RLUtils.modId("keybinding"));
+			*//*?} else {*/ net.minecraft.client.KeyMapping.Category.register(RLUtils.modId("keybinding")); /*?}*/
 	//?}
 
 	@Getter

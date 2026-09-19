@@ -4,7 +4,6 @@ package net.lopymine.patpat.entrypoint.impl.forge;
 
 /*import net.lopymine.patpat.client.PatPatClient;
 import net.lopymine.patpat.modmenu.integration.PatPatModMenuIntegration;
-import net.minecraftforge.fml.ModLoadingContext;
 
 public class ForgeClientEntrypoint {
 
@@ -12,7 +11,7 @@ public class ForgeClientEntrypoint {
 		PatPatClient.onInitializeClient();
 
 		PatPatModMenuIntegration integration = new PatPatModMenuIntegration();
-		integration.register(ModLoadingContext.get().getActiveContainer());
+		integration.register(ForgeCommonEntrypoint.getContext().getContainer());
 	}
 
 }

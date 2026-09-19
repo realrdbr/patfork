@@ -26,7 +26,7 @@ public class KeyboardHandlerMixin {
 			return;
 		}
 
-		Screen screen = Minecraft.getInstance().gui.screen();
+		Screen screen = /*? if >=26.3 {*/ Minecraft.getInstance().gui.screen() /*?} else {*/ /*Minecraft.getInstance().screen *//*?}*/;
 
 		if (screen instanceof ScreenWithPatPatKeybinding keybindingScreen) {
 			keybindingScreen.patPat$onKeyReleased();

@@ -15,11 +15,11 @@ public class MossyUtils {
 	}
 
 	public static String getProperty(@NotNull Project project, String id) {
-		Map<String, ?> properties = project.getProperties();
-		if (!properties.containsKey(id)) {
+		Object value = project.findProperty(id);
+		if (value == null) {
 			throw new IllegalArgumentException("Missing important property with id \"%s\" !".formatted(id));
 		}
-		return properties.get(id).toString();
+		return value.toString();
 	}
 
 	public static String substringBeforeLast(String value, String since) {

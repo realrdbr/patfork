@@ -71,7 +71,7 @@ public class NoConfigLibrariesScreen {
 		@Override
 		public boolean keyPressed(KeyEvent keyEvent) {
 			if (keyEvent.key() == 256 && this.shouldCloseOnEsc()) {
-				Minecraft.getInstance().gui.setScreen(this.parent);
+				/*? if >=26.3 {*/ Minecraft.getInstance().gui.setScreen(this.parent); /*?} else {*/ /*Minecraft.getInstance().setScreen(this.parent); *//*?}*/
 				return true;
 			}
 			return super.keyPressed(keyEvent);
@@ -81,7 +81,7 @@ public class NoConfigLibrariesScreen {
 			/*@Override
 			public boolean keyPressed(net.minecraft.client.input.KeyEvent event) {
 				if (keyCode == 256 && this.shouldCloseOnEsc()) {
-					Minecraft.getInstance().gui.setScreen(parent);
+					Minecraft.getInstance().setScreen(parent);
 					return true;
 				}
 				return super.keyPressed(keyCode, scanCode, modifiers);

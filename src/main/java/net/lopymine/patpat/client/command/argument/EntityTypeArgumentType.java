@@ -35,7 +35,7 @@ public class EntityTypeArgumentType implements ArgumentType<EntityType<?>> {
 		try {
 			Identifier s = Identifier.read(reader);
 			PatPatClientCommandManager.LOGGER.debug("Parsed EntityType from EntityTypeArgumentType: {}", s);
-			EntityType<?> entityType = VersionedThings.ENTITY_TYPE.getOptional(s).orElse(null);
+			EntityType<?> entityType = /*? if forge {*/ /*VersionedThings.ENTITY_TYPE.getValue(s) *//*?} else {*/ VersionedThings.ENTITY_TYPE.getOptional(s).orElse(null) /*?}*/;
 			if (entityType == null) {
 				PatPatClientCommandManager.LOGGER.debug("entityType is null, cannot parse EntityType from EntityTypeArgumentType!");
 				throw UNKNOWN_ENTITY_TYPE.createWithContext(reader, reader.getString());

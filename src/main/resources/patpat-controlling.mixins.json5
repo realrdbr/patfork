@@ -1,7 +1,9 @@
 {
 	"required": true,
 	"package": "net.lopymine.patpat.mixin.controlling",
-	"refmap": "${mod_id}.refmap.json",
+	/*? if <26.1 {*/
+	/*"refmap": "${mod_id}.refmap.json",
+	*//*?}*/
 	"plugin": "net.lopymine.patpat.compat.controlling.ControllingCompatPlugin",
 	"compatibilityLevel": "JAVA_${java}",
 	"mixins": [
